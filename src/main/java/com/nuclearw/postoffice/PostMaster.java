@@ -159,7 +159,7 @@ public class PostMaster {
 			String messageBody = letter.getMessage();
 
 			to.sendMessage("A letter from: " + fromName);
-			to.sendMessage(messageBody);
+			to.sendMessage("Message: " + messageBody);
 		} else {
 			Package pack = (Package) mail;
 
