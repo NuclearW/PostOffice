@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nuclearw.postoffice.mail.Mail;
@@ -30,6 +31,11 @@ public class PostOffice extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		// Attempt to return all held packages
+		for(Mail mail : held.values()) {
+			PostMaster.returnMail(mail);
+		}
+
 		// Goodbye, world
 		getLogger().info("Finished Unloading "+getDescription().getFullName());
 	}
@@ -64,5 +70,18 @@ public class PostOffice extends JavaPlugin {
 	public boolean holdMail(Player player, Mail mail) {
 		if(isHoldingMail(player)) return false;
 		return (held.put(player, mail) != null);
+	}
+
+	/**
+	 * Remove held mail from a player
+	 *
+	 * @param player Player to remove mail from
+	 * @return True if mail was removed, false if not
+	 */
+	public boolean removeHeldMail(Player player) {
+		if(!isHoldingMail(player)) return false;
+
+		if(held.remove(player) == null) return false;
+		return true;
 	}
 }

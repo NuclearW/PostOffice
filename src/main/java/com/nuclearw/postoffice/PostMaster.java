@@ -7,9 +7,16 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
 import com.nuclearw.postoffice.mail.Mail;
+import com.nuclearw.postoffice.mail.Package;
 
 public class PostMaster {
 	private static PostMaster instance;
@@ -82,6 +89,42 @@ public class PostMaster {
 	 */
 	public static List<Mail> readMail(String name) {
 		return getMail(name, false);
+	}
+
+	/**
+	 * Return mail to a person
+	 *
+	 * @param mail Mail to return
+	 * @return True if the mail could be returned, false if there was an error
+	 */
+	public static boolean returnMail(Mail mail) {
+		if(mail instanceof Package) {
+			boolean status = true;
+
+			Package pack = (Package) mail;
+
+			String fromName = pack.sentFrom();
+			Player from = plugin.getServer().getPlayer(fromName);
+
+			ItemStack item = pack.getItem();
+			Inventory inventory = from.getInventory();
+
+			HashMap<Integer, ItemStack> extra = inventory.addItem(item);
+
+			if(extra.isEmpty()) {
+				return true;
+			} else {
+				for(ItemStack extras : extra.values()) {
+					Item dropped = from.getWorld().dropItemNaturally(from.getLocation(), extras);
+					if(dropped == null) status = false;
+				}
+			}
+
+			return status;
+		} else {
+			// Cannot return letters
+			return true;
+		}
 	}
 
 	private static List<Mail> getMail(String name, boolean empty) {
