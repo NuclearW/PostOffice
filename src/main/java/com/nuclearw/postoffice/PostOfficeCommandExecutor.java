@@ -54,8 +54,8 @@ public class PostOfficeCommandExecutor implements CommandExecutor {
 				// Invalid args
 				return false;
 			}
-		} else if(args.length > 2) {
-			// Args > 2 we are actually sending things now
+		} else if(args.length > 1) {
+			// Args > 1 we are actually sending things now
 			// First arg in this case will be our target to send to
 			String toName = args[0];
 
