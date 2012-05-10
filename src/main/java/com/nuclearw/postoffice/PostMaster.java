@@ -51,7 +51,17 @@ public class PostMaster {
 	 * @param mail Mail to be sent
 	 */
 	public static void sendMail(Mail mail) {
-		// TODO: Handle mail
+		File box = getBox(mail.sentTo());
+
+		if(!hasBox(box)) {
+			makeBox(box);
+		}
+
+		int mailIndex = getBoxSize(box) + 1;
+
+		File location = new File(box, "" + mailIndex);
+
+		serializeMail(mail, location);
 	}
 
 	/**
