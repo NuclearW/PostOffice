@@ -140,7 +140,60 @@ public class PostOfficeCommandExecutor implements CommandExecutor {
 					// Remove item from their hand
 					from.setItemInHand(new ItemStack(0));
 				} else {
-					// TODO: Letter
+					// Do our player-only stuff here, like permissions and held mail
+					if(sender instanceof Player) {
+						// Get our sender
+						Player from = (Player) sender;
+
+						// Check permissions
+						if(!from.hasPermission("postoffice.mail")) {
+							from.sendMessage("You do not have permission to do that");
+							return true;
+						}
+
+						// Check to see if already holding mail
+						if(plugin.isHoldingMail(from)) {
+							from.sendMessage("You are already holding mail.");
+							return true;
+						}
+					}
+
+					// Grab name of our sender
+					String fromName = sender.getName();
+
+					// Get message
+					String message = args[1];
+					for(int i = 2; i < args.length; i++) {
+						message += " " + args[i];
+					}
+
+					// Make letter
+					Letter letter = new Letter(toName, fromName, message);
+
+					// More player-only stuff, hold mail
+					if(sender instanceof Player) {
+						// Get our sender
+						Player from = (Player) sender;
+
+						// Give it to player to hold
+						if(!plugin.holdMail(from, letter)) {
+							// Something went wrong, this should not happen
+							from.sendMessage("Error making mail!");
+							plugin.getLogger().severe("Error making mail for " + fromName + "!");
+							return true;
+						}
+
+						// Notify user of mail they are holding
+						from.sendMessage("You have prepared a letter for: " + toName);
+						from.sendMessage("Message: " + message);
+					} else {
+						// Not a player, console, send immediately
+						PostMaster.sendMail(letter);
+
+						// Notify console
+						sender.sendMessage("You have sent a letter for: " + toName);
+						sender.sendMessage("Message: " + message);
+					}
 				}
 			}
 		}
