@@ -7,7 +7,7 @@ commands:
     mail:
         description: Send mail
         usage: |
-            /<command> <user> <package | message ...>
+            /<command> <user | cancel> <package | message ...>
 permissions:
     postoffice.*:
         description: Gives access to all PostOffice commands

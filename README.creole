@@ -4,7 +4,7 @@ PostOffice lets you send mail to offline player which they can pick up at their 
 
 === Commands
 
-* /mail <user> <package | message ...>
+* /mail <user | cancel> <package | message ...>
 
 === Permissions
 
