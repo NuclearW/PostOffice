@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.nuclearw.postoffice.mail.Mail;
@@ -74,11 +75,26 @@ public class PostMaster {
 	}
 
 	private static List<Mail> getMail(String name, boolean empty) {
-		// TODO: Get mail
-		if(empty) {
-			// TODO: Empty mailbox
+		List<Mail> mail = new ArrayList<Mail>();
+
+		File box = getBox(name);
+		if(!hasBox(box)) {
+			return mail;	// Does not have box?  Return empty list
 		}
-		return null;
+
+		if(!isBoxEmpty(box)) {
+			int length = getBoxSize(box);
+			for(int i = 0; i <= length; i++) {
+				File location = new File(box, "" + i);
+				mail.add(deserializeMail(location));
+			}
+		}
+
+		if(empty) {
+			emptyBox(box);
+		}
+
+		return mail;
 	}
 
 	private static File getBox(String name) {
