@@ -106,6 +106,8 @@ public class PostMaster {
 			String fromName = pack.sentFrom();
 			Player from = plugin.getServer().getPlayer(fromName);
 
+			if(from == null) return false;	// Fail on null player
+
 			ItemStack item = pack.getItem();
 			Inventory inventory = from.getInventory();
 
