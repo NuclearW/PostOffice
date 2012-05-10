@@ -1,0 +1,31 @@
+name: ${project.name}
+main: com.nuclearw.postoffice.PostOffice
+version: ${project.version}
+author: NuclearW
+description: PostOffice lets you send mail to offline player which they can pick up at their mailbox.
+database: true
+commands:
+    mail:
+        description: Send mail
+        usage: |
+            /<command> <user> <package | message ...>
+permissions:
+    postoffice.*:
+        description: Gives access to all PostOffice commands
+        children:
+            postoffice.mail: true
+            postoffice.mail.all: true
+            postoffice.package: true
+            postoffice.mail: true
+    postoffice.mail:
+        description: Allows you to send a message to a user
+        default: op
+    postoffice.mail.all:
+        description: Allows you to send a message to all users
+        default: op
+    postoffice.package:
+        description: Allows you to send a package
+        default: op
+    postoffice.make:
+        description: Allows you to create a mailbox or postoffice box
+        default: op

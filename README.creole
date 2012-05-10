@@ -1,0 +1,24 @@
+== PostOffice
+
+PostOffice lets you send mail to offline player which they can pick up at their mailbox.
+
+=== Commands
+
+* /mail <user> <package | message ...>
+
+=== Permissions
+
+* postoffice.mail
+** //Allows you to send a message to a user//
+* postoffice.mail.all
+** //Allows you to send a message to all users//
+* postoffice.package
+** //Allows you to send a package//
+* postoffice.make
+** //Allows you to create a mailbox or postoffice box//
+
+All permissions default to **op**
+
+=== Compiling
+
+Maven 3 is required to compile PostOffice
