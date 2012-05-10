@@ -80,6 +80,27 @@ public class PostMaster {
 		}
 		return null;
 	}
+
+	private static File getBox(String name) {
+		return new File(dataDir, name);
+	}
+
+	private static boolean hasBox(File box) {
+		return box.isDirectory();
+	}
+
+	private static boolean makeBox(File box) {
+		return box.mkdir();
+	}
+
+	private static boolean isBoxEmpty(File box) {
+		return box.list().length == 0;
+	}
+
+	private static int getBoxSize(File box) {
+		return box.list().length;
+	}
+
 	private static void serializeMail(Mail mail, File location) {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(location);
