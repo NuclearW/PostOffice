@@ -66,6 +66,8 @@ public class PostMaster {
 	public static void sendMail(Mail mail) {
 		File box = getBox(mail.sentTo());
 
+		// TODO: Special case for __ALL_USERS__
+
 		if(!hasBox(box)) {
 			makeBox(box);
 		}
