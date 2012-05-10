@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.nuclearw.postoffice.mail.Letter;
 import com.nuclearw.postoffice.mail.Mail;
 import com.nuclearw.postoffice.mail.Package;
 
@@ -127,6 +128,54 @@ public class PostMaster {
 			// Cannot return letters
 			return true;
 		}
+	}
+
+	/**
+	 * Deliver mail to a person
+	 *
+	 * @param mail Mail to deliver
+	 * @return True if the mail was delivered, false if there was an error (items should be destroyed, letters kept)
+	 */
+	public static boolean deliverMail(Mail mail) {
+		boolean status = true;
+
+		String toName = mail.sentTo();
+		Player to = plugin.getServer().getPlayer(toName);
+
+		String fromName = mail.sentFrom();
+
+		if(to == null) return false;	// Fail on null player
+
+		if(mail instanceof Letter) {
+			Letter letter = (Letter) mail;
+
+			String messageBody = letter.getMessage();
+
+			to.sendMessage("A letter from: " + fromName);
+			to.sendMessage(messageBody);
+		} else {
+			Package pack = (Package) mail;
+
+			ItemStack item = pack.getItem();
+			Inventory inventory = to.getInventory();
+
+			if(inventory.firstEmpty() == 0) {
+				to.sendMessage("Not enough room to open this package!");
+				status = false;
+			} else {
+				HashMap<Integer, ItemStack> extra = inventory.addItem(item);
+
+				if(!extra.isEmpty()) {
+					plugin.getLogger().severe("Attempted to place items in inventory but had extra!");
+					to.sendMessage("Something wrong happened!  Please contact your administrator.");
+					status = false;
+				} else {
+					to.sendMessage("A package from: " + fromName);
+					to.sendMessage(item.getAmount() + "x " + item.getType().toString());
+				}
+			}
+		}
+		return status;
 	}
 
 	private static List<Mail> getMail(String name, boolean empty) {
