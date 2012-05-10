@@ -1,6 +1,11 @@
 package com.nuclearw.postoffice;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 import com.nuclearw.postoffice.mail.Mail;
@@ -74,5 +79,34 @@ public class PostMaster {
 			// TODO: Empty mailbox
 		}
 		return null;
+	}
+	private static void serializeMail(Mail mail, File location) {
+		try {
+			FileOutputStream fileOut = new FileOutputStream(location);
+			ObjectOutputStream objOut = new ObjectOutputStream(fileOut);
+			objOut.writeObject(mail);
+			objOut.close();
+			fileOut.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	private static Mail deserializeMail(File location) {
+		Mail mail = null;
+
+		try {
+			FileInputStream fileIn = new FileInputStream(location);
+			ObjectInputStream objIn = new ObjectInputStream(fileIn);
+			mail = (Mail) objIn.readObject();
+			objIn.close();
+			fileIn.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
+		}
+
+		return mail;
 	}
 }
