@@ -30,6 +30,11 @@ public class PostMaster {
 
 		File rootDir = plugin.getDataFolder();
 		this.dataDir = new File(rootDir, "boxes");
+
+		if(!dataDir.exists()) dataDir.mkdir();
+
+		File allUsers = new File(dataDir, "__ALL_USERS__");
+		if(!allUsers.exists()) allUsers.mkdir();
 	}
 
 	/**
