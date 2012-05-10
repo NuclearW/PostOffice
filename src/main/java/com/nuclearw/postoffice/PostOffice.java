@@ -21,9 +21,6 @@ public class PostOffice extends JavaPlugin {
 		// Register command
 		getCommand("mail").setExecutor(new PostOfficeCommandExecutor(this));
 
-		// Database
-		initDatabase();
-
 		// Hello, world
 		getLogger().info("Finished Loading " + getDescription().getFullName());
 	}
@@ -31,21 +28,5 @@ public class PostOffice extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		getLogger().info("Finished Unloading "+getDescription().getFullName());
-	}
-
-	@Override
-    public List<Class<?>> getDatabaseClasses() {
-        List<Class<?>> list = new ArrayList<Class<?>>();
-        list.add(POBox.class);
-        return list;
-    }
-
-	private void initDatabase() {
-        try {
-            getDatabase().find(POBox.class).findRowCount();
-        } catch (PersistenceException ex) {
-            getLogger().info("Initializing database");
-            this.installDDL();
-        }
 	}
 }

@@ -3,7 +3,6 @@ main: com.nuclearw.postoffice.PostOffice
 version: ${project.version}
 author: NuclearW
 description: PostOffice lets you send mail to offline player which they can pick up at their mailbox.
-database: true
 commands:
     mail:
         description: Send mail
