@@ -101,6 +101,18 @@ public class PostMaster {
 		return box.list().length;
 	}
 
+	private static boolean emptyBox(File box) {
+		boolean result = true;
+
+		for(String file : box.list()) {
+			File mail = new File(box, file);
+			boolean test = mail.delete();
+			if(test == false) result = false;
+		}
+
+		return result;
+	}
+
 	private static void serializeMail(Mail mail, File location) {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(location);
