@@ -178,6 +178,18 @@ public class PostMaster {
 		return status;
 	}
 
+	protected static File getBox(String name) {
+		return new File(dataDir, name.toLowerCase());
+	}
+
+	protected static boolean hasBox(File box) {
+		return box.isDirectory();
+	}
+
+	protected static boolean makeBox(File box) {
+		return box.mkdir();
+	}
+
 	private static List<Mail> getMail(String name, boolean empty) {
 		List<Mail> mail = new ArrayList<Mail>();
 
@@ -199,18 +211,6 @@ public class PostMaster {
 		}
 
 		return mail;
-	}
-
-	private static File getBox(String name) {
-		return new File(dataDir, name.toLowerCase());
-	}
-
-	private static boolean hasBox(File box) {
-		return box.isDirectory();
-	}
-
-	private static boolean makeBox(File box) {
-		return box.mkdir();
 	}
 
 	private static boolean isBoxEmpty(File box) {
