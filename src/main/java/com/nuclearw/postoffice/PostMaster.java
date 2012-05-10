@@ -153,7 +153,7 @@ public class PostMaster {
 	}
 
 	private static File getBox(String name) {
-		return new File(dataDir, name);
+		return new File(dataDir, name.toLowerCase());
 	}
 
 	private static boolean hasBox(File box) {
