@@ -1,6 +1,7 @@
 package com.nuclearw.postoffice;
 
 import java.io.File;
+import java.util.List;
 
 import com.nuclearw.postoffice.mail.Mail;
 
@@ -38,7 +39,40 @@ public class PostMaster {
 		return instance;
 	}
 
+	/**
+	 * Send mail
+	 *
+	 * @param mail Mail to be sent
+	 */
 	public static void sendMail(Mail mail) {
 		// TODO: Handle mail
+	}
+
+	/**
+	 * Return all mail from a box and empty it
+	 *
+	 * @param name Name of the player's mail to retrieve
+	 * @return A List of all Mail objects for that user
+	 */
+	public static List<Mail> getMail(String name) {
+		return getMail(name, true);
+	}
+
+	/**
+	 * Return all mail from a box but do not empty it
+	 *
+	 * @param name Name of the player's mail to retrieve
+	 * @return A List of all Mail objects for that user
+	 */
+	public static List<Mail> readMail(String name) {
+		return getMail(name, false);
+	}
+
+	private static List<Mail> getMail(String name, boolean empty) {
+		// TODO: Get mail
+		if(empty) {
+			// TODO: Empty mailbox
+		}
+		return null;
 	}
 }
