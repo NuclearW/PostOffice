@@ -19,7 +19,7 @@ public class PostOffice extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new PostOfficeListener(this), this);
 
 		// Register command
-		// TODO: Command registration
+		getCommand("mail").setExecutor(new PostOfficeCommandExecutor(this));
 
 		// Database
 		initDatabase();
@@ -37,7 +37,6 @@ public class PostOffice extends JavaPlugin {
     public List<Class<?>> getDatabaseClasses() {
         List<Class<?>> list = new ArrayList<Class<?>>();
         list.add(POBox.class);
-        list.add(Mailbox.class);
         return list;
     }
 

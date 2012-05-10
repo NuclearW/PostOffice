@@ -1,5 +1,7 @@
 package com.nuclearw.postoffice;
 
+import org.bukkit.Location;
+
 public class PostMaster {
 	private static PostMaster instance;
 	private static PostOffice plugin;
