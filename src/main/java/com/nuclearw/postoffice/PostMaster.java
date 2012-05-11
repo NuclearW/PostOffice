@@ -6,7 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -151,6 +153,9 @@ public class PostMaster {
 
 		String fromName = mail.sentFrom();
 
+		Date sentDate = new Date(mail.sentAt());
+		String sentAt = DateFormat.getDateTimeInstance().format(sentDate);
+
 		if(to == null) return false;	// Fail on null player
 
 		if(mail instanceof Letter) {
@@ -159,6 +164,7 @@ public class PostMaster {
 			String messageBody = letter.getMessage();
 
 			to.sendMessage("A letter from: " + fromName);
+			to.sendMessage("Written at: " + sentAt);
 			to.sendMessage("Message: " + messageBody);
 		} else {
 			Package pack = (Package) mail;
@@ -178,6 +184,7 @@ public class PostMaster {
 					status = false;
 				} else {
 					to.sendMessage("A package from: " + fromName);
+					to.sendMessage("Packaged at: " + sentAt);
 					to.sendMessage(item.getAmount() + "x " + item.getType().toString());
 				}
 			}
