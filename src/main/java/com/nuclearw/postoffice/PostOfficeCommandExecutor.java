@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.nuclearw.postoffice.mail.Letter;
-import com.nuclearw.postoffice.mail.Mail;
 import com.nuclearw.postoffice.mail.Package;
 
 public class PostOfficeCommandExecutor implements CommandExecutor {

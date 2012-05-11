@@ -3,8 +3,6 @@ package com.nuclearw.postoffice;
 import java.io.File;
 import java.util.List;
 
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -18,8 +16,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.material.Wool;
-
 import com.nuclearw.postoffice.mail.Mail;
 
 public class PostOfficeListener implements Listener {
