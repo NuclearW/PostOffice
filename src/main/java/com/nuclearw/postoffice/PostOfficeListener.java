@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.material.Wool;
 
@@ -76,12 +77,31 @@ public class PostOfficeListener implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void onSignChange(SignChangeEvent event) {
+		String marker = event.getLine(0);
+
+		if(marker.equalsIgnoreCase("[POBox]") || marker.equalsIgnoreCase("[Mailbox]")) {
+			Player player = event.getPlayer();
+
+			if(!player.hasPermission("postoffice.make")) {
+				player.sendMessage("You do not have permission to do that");
+				event.setLine(0, "");
+				return;
+			}
+
+			if(marker.equalsIgnoreCase("[POBox]")) event.setLine(0, "[POBox]");
+			else event.setLine(0, "[Mailbox]");
+		}
+	}
+
 	private boolean isPostOfficeSign(Block block) {
 		if(block.getState() instanceof Sign) {
 			return isPostOfficeSign((Sign) block.getState());
 		}
 		return false;
 	}
+
 	private boolean isPostOfficeSign(Sign sign) {
 		String text = sign.getLine(0);
 		if(text == null) return false;
