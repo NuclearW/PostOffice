@@ -1,6 +1,7 @@
 package com.nuclearw.postoffice;
 
 import java.io.File;
+import java.util.List;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -11,10 +12,14 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.material.Wool;
+
+import com.nuclearw.postoffice.mail.Mail;
 
 public class PostOfficeListener implements Listener {
 	private static PostOffice plugin;
@@ -120,6 +125,70 @@ public class PostOfficeListener implements Listener {
 				}
 			}
 			else event.setLine(0, "[Mailbox]");
+		}
+	}
+
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			return;
+		}
+
+		Block block = event.getClickedBlock();
+		Player player = event.getPlayer();
+
+		if(block.getState() instanceof Sign) {
+			Sign sign = (Sign) block.getState();
+			if(isPostOfficeSign(sign)) {
+				processInteraction(event, sign, player);
+			}
+		} else if(block instanceof Wool) {
+			Wool wool = (Wool) block;
+			if(wool.getColor().equals(DyeColor.BLUE) || wool.getColor().equals(DyeColor.WHITE)) {
+				Sign found = null;
+
+				Block[] blocks = getSurroundingBlocks(block);
+				for(Block b : blocks) {
+					if(b != null && isPostOfficeSign(b)) {
+						found = (Sign) b.getState();
+						break;
+					}
+				}
+
+				if(found != null) {
+					processInteraction(event, found, player);
+				}
+			}
+		}
+	}
+
+	private void processInteraction(PlayerInteractEvent event, Sign sign, Player player) {
+		if(sign.getLine(0).equalsIgnoreCase("[Mailbox]")) {
+			if(plugin.isHoldingMail(player)) {
+				PostMaster.sendMail(plugin.getHeldMail(player));
+				plugin.removeHeldMail(player);
+				player.sendMessage("Mail sent");
+			} else {
+				player.sendMessage("You aren't holding any mail");
+			}
+		} else {
+			String name = sign.getLine(1);
+
+			if(!name.equals(player.getName())) {
+				player.sendMessage("This isn't your mailbox");
+			} else {
+				List<Mail> mails = PostMaster.getMail(name);
+				if(mails == null || mails.isEmpty()) {
+					player.sendMessage("No mail");
+				} else {
+					for(Mail mail : mails) {
+						if(!PostMaster.deliverMail(mail)) {
+							player.sendMessage("Couldn't open that mail, putting it back in the box");
+							PostMaster.sendMail(mail);
+						}
+					}
+				}
+			}
 		}
 	}
 
