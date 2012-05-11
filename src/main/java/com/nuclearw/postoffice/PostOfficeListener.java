@@ -26,7 +26,7 @@ public class PostOfficeListener implements Listener {
 	private static PostOffice plugin;
 
 	public PostOfficeListener(PostOffice plugin) {
-		this.plugin = plugin;
+		PostOfficeListener.plugin = plugin;
 	}
 
 	@EventHandler

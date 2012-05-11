@@ -28,13 +28,13 @@ public class PostMaster {
 	private static File dataDir;
 
 	private PostMaster(PostOffice plugin) {
-		this.plugin = plugin;
+		PostMaster.plugin = plugin;
 
 		File rootDir = plugin.getDataFolder();
 
 		if(!rootDir.exists()) rootDir.mkdir();
 
-		this.dataDir = new File(rootDir, "boxes");
+		PostMaster.dataDir = new File(rootDir, "boxes");
 
 		if(!dataDir.exists()) dataDir.mkdir();
 

@@ -17,7 +17,7 @@ public class PostOfficeCommandExecutor implements CommandExecutor {
 	private static PostOffice plugin;
 
 	public PostOfficeCommandExecutor(PostOffice plugin) {
-		this.plugin = plugin;
+		PostOfficeCommandExecutor.plugin = plugin;
 	}
 
 	@Override
