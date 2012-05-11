@@ -68,7 +68,8 @@ public class PostOffice extends JavaPlugin {
 	 */
 	public boolean holdMail(Player player, Mail mail) {
 		if(isHoldingMail(player)) return false;
-		return (held.put(player, mail) != null);
+		held.put(player, mail);
+		return held.containsKey(player);
 	}
 
 	/**
