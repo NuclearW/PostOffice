@@ -204,6 +204,19 @@ public class PostMaster {
 		return box.mkdir();
 	}
 
+	protected static boolean deleteBox(File box) {
+		boolean status = true;
+
+		for(String item : box.list()) {
+			File delete = new File(box, item);
+			if(!delete.delete()) status = false;
+		}
+
+		if(!box.delete()) status = false;
+
+		return status;
+	}
+
 	private static List<Mail> getMail(String name, boolean empty) {
 		List<Mail> mail = new ArrayList<Mail>();
 
