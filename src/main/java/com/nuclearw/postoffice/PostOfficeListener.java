@@ -1,7 +1,10 @@
 package com.nuclearw.postoffice;
 
+import java.io.File;
+
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -90,7 +93,32 @@ public class PostOfficeListener implements Listener {
 				return;
 			}
 
-			if(marker.equalsIgnoreCase("[POBox]")) event.setLine(0, "[POBox]");
+			if(marker.equalsIgnoreCase("[POBox]")) {
+				event.setLine(0, "[POBox]");
+
+				String targetName = event.getLine(1);
+
+				// Attempt to match based on online users
+				Player to = plugin.getServer().getPlayer(targetName);
+				if(to != null) {
+					// If we have a match, set it
+					targetName = to.getName();
+				} else {
+					// If not, attempt to match based on offline users
+					OfflinePlayer toOffline = plugin.getServer().getOfflinePlayer(targetName);
+					if(toOffline != null) {
+						// If we have a match, set it
+						targetName = toOffline.getName();
+					}
+				}
+
+				event.setLine(1, targetName);
+
+				File box = PostMaster.getBox(targetName);
+				if(!PostMaster.hasBox(box)) {
+					PostMaster.makeBox(box);
+				}
+			}
 			else event.setLine(0, "[Mailbox]");
 		}
 	}
