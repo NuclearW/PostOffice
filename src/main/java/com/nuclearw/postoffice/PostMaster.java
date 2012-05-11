@@ -77,7 +77,7 @@ public class PostMaster {
 			makeBox(box);
 		}
 
-		int mailIndex = getBoxSize(box) + 1;
+		int mailIndex = getBoxSize(box);
 
 		File location = new File(box, "" + mailIndex);
 
@@ -230,7 +230,7 @@ public class PostMaster {
 
 		if(!isBoxEmpty(box)) {
 			int length = getBoxSize(box);
-			for(int i = 0; i <= length; i++) {
+			for(int i = 0; i < length; i++) {
 				File location = new File(box, "" + i);
 				mail.add(deserializeMail(location));
 			}
