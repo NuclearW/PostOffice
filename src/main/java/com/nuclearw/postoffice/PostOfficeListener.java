@@ -58,9 +58,10 @@ public class PostOfficeListener implements Listener {
 				PostMaster.deleteBox(box);
 				/**/
 			}
-		} else if(block instanceof Wool) {
-			Wool wool = (Wool) block;
-			if(wool.getColor().equals(DyeColor.BLUE) || wool.getColor().equals(DyeColor.WHITE)) {
+		}
+		/*
+		else if(block.getType().equals(Material.WOOL)) {
+			if(block.getData() == 0x0 || block.getData() == 0xB) {
 				Sign found = null;
 
 				Block[] blocks = getSurroundingBlocks(block);
@@ -77,12 +78,12 @@ public class PostOfficeListener implements Listener {
 					return;
 				}
 
-				/**/
+
 				File box = PostMaster.getBox(found.getLine(1));
 				PostMaster.deleteBox(box);
-				/**/
 			}
 		}
+		*/
 	}
 
 	@EventHandler
@@ -142,9 +143,10 @@ public class PostOfficeListener implements Listener {
 			if(isPostOfficeSign(sign)) {
 				processInteraction(event, sign, player);
 			}
-		} else if(block instanceof Wool) {
-			Wool wool = (Wool) block;
-			if(wool.getColor().equals(DyeColor.BLUE) || wool.getColor().equals(DyeColor.WHITE)) {
+		}
+		/*
+		else if(block.getType().equals(Material.WOOL)) {
+			if(block.getData() == 0x0 || block.getData() == 0xB) {
 				Sign found = null;
 
 				Block[] blocks = getSurroundingBlocks(block);
@@ -160,6 +162,7 @@ public class PostOfficeListener implements Listener {
 				}
 			}
 		}
+		*/
 	}
 
 	private void processInteraction(PlayerInteractEvent event, Sign sign, Player player) {
