@@ -143,7 +143,7 @@ public class PostMaster {
 	 * Deliver mail to a person
 	 *
 	 * @param mail Mail to deliver
-	 * @return True if the mail was delivered, false if there was an error (items should be destroyed, letters kept)
+	 * @return True if the mail was delivered, false if there was an error
 	 */
 	public static boolean deliverMail(Mail mail) {
 		boolean status = true;
