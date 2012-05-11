@@ -31,6 +31,9 @@ public class PostMaster {
 		this.plugin = plugin;
 
 		File rootDir = plugin.getDataFolder();
+
+		if(!rootDir.exists()) rootDir.mkdir();
+
 		this.dataDir = new File(rootDir, "boxes");
 
 		if(!dataDir.exists()) dataDir.mkdir();
