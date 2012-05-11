@@ -53,10 +53,10 @@ public class PostOfficeListener implements Listener {
 					return;
 				}
 
-				/*
+				/**/
 				File box = PostMaster.getBox(sign.getLine(1));
 				PostMaster.deleteBox(box);
-				*/
+				/**/
 			}
 		} else if(block instanceof Wool) {
 			Wool wool = (Wool) block;
@@ -77,10 +77,10 @@ public class PostOfficeListener implements Listener {
 					return;
 				}
 
-				/*
+				/**/
 				File box = PostMaster.getBox(found.getLine(1));
 				PostMaster.deleteBox(box);
-				*/
+				/**/
 			}
 		}
 	}
