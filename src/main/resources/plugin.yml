@@ -15,7 +15,7 @@ permissions:
             postoffice.mail: true
             postoffice.mail.all: true
             postoffice.package: true
-            postoffice.mail: true
+            postoffice.make: true
     postoffice.mail:
         description: Allows you to send a message to a user
         default: op
