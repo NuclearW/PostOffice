@@ -196,6 +196,8 @@ public class PostOfficeCommandExecutor implements CommandExecutor {
 					}
 				}
 			}
+		} else {
+			return false;
 		}
 
 		return true;
