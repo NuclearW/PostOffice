@@ -69,9 +69,22 @@ public class PostMaster {
 	 * @param mail Mail to be sent
 	 */
 	public static void sendMail(Mail mail) {
-		File box = getBox(mail.sentTo());
+		if(mail.sentTo().equals("__ALL_USERS__")) {
+			for(String entry : dataDir.list()) {
+				if(entry.equals("__ALL_USERS__")) continue;
 
-		// TODO: Special case for __ALL_USERS__
+				File box = new File(dataDir, entry);
+				if(!box.isDirectory()) continue;
+
+				int mailIndex = getBoxSize(box);
+
+				File location = new File(box, "" + mailIndex);
+
+				serializeMail(mail, location);
+			}
+			return;
+		}
+		File box = getBox(mail.sentTo());
 
 		if(!hasBox(box)) {
 			makeBox(box);
