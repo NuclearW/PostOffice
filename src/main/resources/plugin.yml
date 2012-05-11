@@ -28,3 +28,6 @@ permissions:
     postoffice.make:
         description: Allows you to create a mailbox or postoffice box
         default: op
+    postoffice.break:
+        description: Allows you to destroy a mailbox or postoffice box
+        default: op
