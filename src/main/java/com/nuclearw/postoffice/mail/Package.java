@@ -5,13 +5,15 @@ import org.bukkit.inventory.ItemStack;
 public class Package implements Mail {
 	private static final long serialVersionUID = 8606293052193623144L;
 
-	private String sentTo, sentFrom;
-	private ItemStack item;
+	private final String sentTo, sentFrom;
+	private final ItemStack item;
+	private final long sentAt;
 
 	public Package(String sentTo, String sentFrom, ItemStack item) {
 		this.sentTo = sentTo;
 		this.sentFrom = sentFrom;
 		this.item = item;
+		this.sentAt = System.currentTimeMillis();
 	}
 
 	public ItemStack getItem() {
@@ -26,5 +28,10 @@ public class Package implements Mail {
 	@Override
 	public String sentFrom() {
 		return sentFrom;
+	}
+
+	@Override
+	public long sentAt() {
+		return sentAt;
 	}
 }

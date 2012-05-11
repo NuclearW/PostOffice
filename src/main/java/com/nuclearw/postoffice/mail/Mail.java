@@ -16,4 +16,11 @@ public interface Mail extends Serializable {
 	 * @return String name of the Player who sent this mail
 	 */
 	public String sentFrom();
+
+	/**
+	 * Find when the mail was sent
+	 *
+	 * @return The time the the mail was sent
+	 */
+	public long sentAt();
 }
