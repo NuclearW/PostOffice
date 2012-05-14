@@ -38,7 +38,7 @@ public class PostMaster {
 
 		if(!dataDir.exists()) dataDir.mkdir();
 
-		File allUsers = new File(dataDir, "__ALL_USERS__");
+		File allUsers = new File(dataDir, "__all_users__");
 		if(!allUsers.exists()) allUsers.mkdir();
 	}
 
