@@ -188,7 +188,7 @@ public class PostMaster {
 			ItemStack item = pack.getItem();
 			Inventory inventory = to.getInventory();
 
-			if(inventory.firstEmpty() == 0) {
+			if(inventory.firstEmpty() == -1) {
 				to.sendMessage("Not enough room to open this package!");
 				status = false;
 			} else {
