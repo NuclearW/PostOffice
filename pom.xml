@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.nuclearw.postoffice</groupId>
     <artifactId>PostOffice</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
     <name>PostOffice</name>
     <url>https://github.com/NuclearW/PostOffice</url>
     <issueManagement>
@@ -63,6 +63,14 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
+            <version>LATEST</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <!-- For GSON access -->
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
             <version>LATEST</version>
             <type>jar</type>
             <scope>compile</scope>

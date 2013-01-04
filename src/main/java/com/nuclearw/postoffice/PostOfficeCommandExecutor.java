@@ -22,7 +22,8 @@ public class PostOfficeCommandExecutor implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		// If not mail command, bail
-		if(!label.equalsIgnoreCase("mail")) return false;
+		if(!label.equalsIgnoreCase("mail"))
+			return false;
 
 		// If one arg, cancel or bust
 		if(args.length == 1) {
@@ -134,7 +135,7 @@ public class PostOfficeCommandExecutor implements CommandExecutor {
 
 					// Notify user of mail they are holding
 					from.sendMessage("You have prepared a package for: " + toName);
-					from.sendMessage(item.getAmount() + "x " + item.getType().toString());
+					from.sendMessage(item.getAmount() + "x " + PostMaster.materialToHuman(item.getType()));
 
 					// Remove item from their hand
 					from.setItemInHand(new ItemStack(0));

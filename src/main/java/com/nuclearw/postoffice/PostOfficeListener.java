@@ -3,6 +3,8 @@ package com.nuclearw.postoffice;
 import java.io.File;
 import java.util.List;
 
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -16,6 +18,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
 import com.nuclearw.postoffice.mail.Mail;
 
 public class PostOfficeListener implements Listener {
@@ -35,7 +38,7 @@ public class PostOfficeListener implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler (ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
@@ -50,46 +53,72 @@ public class PostOfficeListener implements Listener {
 					return;
 				}
 
-				/**/
 				File box = PostMaster.getBox(sign.getLine(1));
-				PostMaster.deleteBox(box);
-				/**/
-			}
-		}
-		/*
-		else if(block.getType().equals(Material.WOOL)) {
-			if(block.getData() == 0x0 || block.getData() == 0xB) {
-				Sign found = null;
+				if(box != null) {
+					boolean gone = PostMaster.deleteBox(box);
+					if(!gone) {
+						player.sendMessage("Oops! Mailbox not deleted!");
+					} else {
+						player.sendMessage("Mailbox deleted.");
 
-				Block[] blocks = getSurroundingBlocks(block);
-				for(Block b : blocks) {
-					if(b != null && isPostOfficeSign(b)) {
-						found = (Sign) b.getState();
-						break;
+						// Delete the bottom block too
+						if(player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.ADVENTURE) {
+							block.getRelative(BlockFace.DOWN).setType(Material.AIR);
+						} else {
+							block.getRelative(BlockFace.DOWN).breakNaturally();
+						}
 					}
 				}
+			}
+		} else if(block.getType().equals(Material.WOOL)) {
+			Sign found = null;
 
-				if(found != null && !player.hasPermission("postoffice.break")) {
-					player.sendMessage("You do not have permission to do that");
-					event.setCancelled(true);
-					return;
+			Block above = block.getRelative(BlockFace.UP);
+			if(above.getState() instanceof Sign) {
+				Sign potential = (Sign) above.getState();
+				if(isPostOfficeSign(potential)) {
+					found = potential;
 				}
+			}
 
+			if(found != null && !player.hasPermission("postoffice.break")) {
+				player.sendMessage("You do not have permission to do that");
+				event.setCancelled(true);
+				return;
+			}
 
+			if(found != null) {
 				File box = PostMaster.getBox(found.getLine(1));
-				PostMaster.deleteBox(box);
+				if(box != null) {
+					boolean gone = PostMaster.deleteBox(box);
+					if(!gone) {
+						player.sendMessage("Oops! Mailbox not deleted!");
+					} else {
+						player.sendMessage("Mailbox deleted.");
+
+						// Delete the sign too
+						if(player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.ADVENTURE) {
+							found.getBlock().setType(Material.AIR);
+						} else {
+							found.getBlock().breakNaturally();
+						}
+					}
+				}
 			}
 		}
-		*/
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onSignChange(SignChangeEvent event) {
 		String marker = event.getLine(0);
 
-		if(marker.equalsIgnoreCase("[POBox]") || marker.equalsIgnoreCase("[Mailbox]")) {
-			Player player = event.getPlayer();
+		// Fail out if we don't have anything to read
+		if(marker == null || marker.trim().length() == 0) {
+			return;
+		}
 
+		Player player = event.getPlayer();
+		if(marker.equalsIgnoreCase("[POBox]")) {
 			if(!player.hasPermission("postoffice.make")) {
 				player.sendMessage("You do not have permission to do that");
 				event.setLine(0, "");
@@ -100,6 +129,11 @@ public class PostOfficeListener implements Listener {
 				event.setLine(0, "[POBox]");
 
 				String targetName = event.getLine(1);
+				if(targetName == null || targetName.trim().length() == 0) {
+					player.sendMessage("You didn't define a player on line 2 of the sign!");
+					event.setLine(0, "");
+					return;
+				}
 
 				// Attempt to match based on online users
 				Player to = plugin.getServer().getPlayer(targetName);
@@ -117,16 +151,42 @@ public class PostOfficeListener implements Listener {
 
 				event.setLine(1, targetName);
 
+				Block below = event.getBlock().getRelative(BlockFace.DOWN);
+				if(below.getType() != Material.AIR && below.getType() != Material.WOOL) {
+					player.sendMessage("No space for a wool block below the sign! Clear a space or place one please!");
+					event.setLine(0, "ERROR");
+					event.setLine(1, "NO WOOL");
+					event.setLine(2, "BELOW SIGN");
+					return;
+				}
+
 				File box = PostMaster.getBox(targetName);
 				if(!PostMaster.hasBox(box)) {
-					PostMaster.makeBox(box);
+					boolean made = PostMaster.makeBox(box);
+					if(!made) {
+						player.sendMessage("Oops! POBox failed for unknown reason.");
+					} else {
+						player.sendMessage("POBox created!");
+						below.setType(Material.WOOL);
+					}
 				}
 			}
-			else event.setLine(0, "[Mailbox]");
+		} else if(marker.equalsIgnoreCase("[Mailbox]")) {
+			event.setLine(0, "[Mailbox]");
+			Block below = event.getBlock().getRelative(BlockFace.DOWN);
+			if(below.getType() != Material.AIR && below.getType() != Material.WOOL) {
+				player.sendMessage("No space for a wool block below the sign! Clear a space or place one please!");
+				event.setLine(0, "ERROR");
+				event.setLine(1, "NO WOOL");
+				event.setLine(2, "BELOW SIGN");
+				return;
+			}
+			player.sendMessage("Mailbox created");
+			below.setType(Material.WOOL);
 		}
 	}
 
-	@EventHandler
+	@EventHandler (ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			return;
@@ -140,17 +200,15 @@ public class PostOfficeListener implements Listener {
 			if(isPostOfficeSign(sign)) {
 				processInteraction(event, sign, player);
 			}
-		}
-		/*
-		else if(block.getType().equals(Material.WOOL)) {
+		} else if(block.getType().equals(Material.WOOL)) {
 			if(block.getData() == 0x0 || block.getData() == 0xB) {
 				Sign found = null;
 
-				Block[] blocks = getSurroundingBlocks(block);
-				for(Block b : blocks) {
-					if(b != null && isPostOfficeSign(b)) {
-						found = (Sign) b.getState();
-						break;
+				Block above = block.getRelative(BlockFace.UP);
+				if(above.getState() instanceof Sign) {
+					Sign potential = (Sign) above.getState();
+					if(isPostOfficeSign(potential)) {
+						found = potential;
 					}
 				}
 
@@ -159,7 +217,6 @@ public class PostOfficeListener implements Listener {
 				}
 			}
 		}
-		*/
 	}
 
 	private void processInteraction(PlayerInteractEvent event, Sign sign, Player player) {
@@ -190,29 +247,23 @@ public class PostOfficeListener implements Listener {
 				}
 			}
 		}
-	}
-
-	private boolean isPostOfficeSign(Block block) {
-		if(block.getState() instanceof Sign) {
-			return isPostOfficeSign((Sign) block.getState());
-		}
-		return false;
+		event.setCancelled(true);
 	}
 
 	private boolean isPostOfficeSign(Sign sign) {
 		String text = sign.getLine(0);
-		if(text == null) return false;
+		if(text == null)
+			return false;
 
-		if(text.equals("[POBox]") || text.equals("[Mailbox]")) return true;
+		boolean state = false;
 
-		return false;
+		if(text.equals("[POBox]") || text.equals("[Mailbox]"))
+			state = true;
+
+		if(state)
+			state = sign.getBlock().getRelative(BlockFace.DOWN).getType() == Material.WOOL;
+
+		return state;
 	}
 
-	private Block[] getSurroundingBlocks(Block block) {
-		Block[] blocks = new Block[6];
-
-		blocks[0] = block.getRelative(BlockFace.UP);
-
-		return blocks;
-	}
 }
