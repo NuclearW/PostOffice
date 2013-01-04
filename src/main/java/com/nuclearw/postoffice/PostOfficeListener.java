@@ -53,20 +53,30 @@ public class PostOfficeListener implements Listener {
 					return;
 				}
 
-				File box = PostMaster.getBox(sign.getLine(1));
-				if(box != null) {
-					boolean gone = PostMaster.deleteBox(box);
-					if(!gone) {
-						player.sendMessage("Oops! Mailbox not deleted!");
-					} else {
-						player.sendMessage("Mailbox deleted.");
-
-						// Delete the bottom block too
-						if(player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.ADVENTURE) {
-							block.getRelative(BlockFace.DOWN).setType(Material.AIR);
+				if(sign.getLine(0).equalsIgnoreCase("[POBox]")) {
+					File box = PostMaster.getBox(sign.getLine(1));
+					if(box != null) {
+						boolean gone = PostMaster.deleteBox(box);
+						if(!gone) {
+							player.sendMessage("Oops! POBox not deleted!");
 						} else {
-							block.getRelative(BlockFace.DOWN).breakNaturally();
+							player.sendMessage("POBox deleted.");
+
+							// Delete the bottom block too
+							if(player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.ADVENTURE) {
+								block.getRelative(BlockFace.DOWN).setType(Material.AIR);
+							} else {
+								block.getRelative(BlockFace.DOWN).breakNaturally();
+							}
 						}
+					}
+				} else if(sign.getLine(0).equalsIgnoreCase("[Mailbox]")) {
+					player.sendMessage("Mailbox deleted.");
+					// Delete the bottom block too
+					if(player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.ADVENTURE) {
+						block.getRelative(BlockFace.DOWN).setType(Material.AIR);
+					} else {
+						block.getRelative(BlockFace.DOWN).breakNaturally();
 					}
 				}
 			}
@@ -86,22 +96,29 @@ public class PostOfficeListener implements Listener {
 				event.setCancelled(true);
 				return;
 			}
-
 			if(found != null) {
-				File box = PostMaster.getBox(found.getLine(1));
-				if(box != null) {
-					boolean gone = PostMaster.deleteBox(box);
-					if(!gone) {
-						player.sendMessage("Oops! Mailbox not deleted!");
-					} else {
-						player.sendMessage("Mailbox deleted.");
-
-						// Delete the sign too
-						if(player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.ADVENTURE) {
-							found.getBlock().setType(Material.AIR);
+				boolean del = false;
+				if(found.getLine(0).equalsIgnoreCase("[POBox]")) {
+					File box = PostMaster.getBox(found.getLine(1));
+					if(box != null) {
+						boolean gone = PostMaster.deleteBox(box);
+						if(!gone) {
+							player.sendMessage("Oops! POBox not deleted!");
 						} else {
-							found.getBlock().breakNaturally();
+							player.sendMessage("POBox deleted.");
+							del = true;
 						}
+					}
+				} else if(found.getLine(0).equalsIgnoreCase("[Mailbox]")) {
+					del = true;
+					player.sendMessage("Mailbox deleted.");
+				}
+				if(del) {
+					// Delete the sign too
+					if(player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.ADVENTURE) {
+						found.getBlock().setType(Material.AIR);
+					} else {
+						found.getBlock().breakNaturally();
 					}
 				}
 			}
@@ -169,6 +186,8 @@ public class PostOfficeListener implements Listener {
 						player.sendMessage("POBox created!");
 						below.setType(Material.WOOL);
 					}
+				} else {
+					player.sendMessage("POBox already exists!");
 				}
 			}
 		} else if(marker.equalsIgnoreCase("[Mailbox]")) {
