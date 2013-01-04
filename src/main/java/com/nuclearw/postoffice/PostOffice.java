@@ -28,6 +28,15 @@ public class PostOffice extends JavaPlugin {
 		getLogger().info("Finished Loading " + getDescription().getFullName());
 	}
 
+	/**
+	 * Gets the instance of the currently used PostMaster
+	 * 
+	 * @return the post master
+	 */
+	public static PostMaster getPostMaster() {
+		return manager;
+	}
+
 	@Override
 	public void onDisable() {
 		// Attempt to return all held packages
@@ -36,12 +45,12 @@ public class PostOffice extends JavaPlugin {
 		}
 
 		// Goodbye, world
-		getLogger().info("Finished Unloading "+getDescription().getFullName());
+		getLogger().info("Finished Unloading " + getDescription().getFullName());
 	}
 
 	/**
 	 * Get if a player is currently holding mail
-	 *
+	 * 
 	 * @param player Player to check if holding mail
 	 * @return True if the player is holding mail currently, false if not
 	 */
@@ -51,7 +60,7 @@ public class PostOffice extends JavaPlugin {
 
 	/**
 	 * Get held mail
-	 *
+	 * 
 	 * @param player Player to get held mail from
 	 * @return The mail the player is holding
 	 */
@@ -61,27 +70,30 @@ public class PostOffice extends JavaPlugin {
 
 	/**
 	 * Give mail to a player to hold
-	 *
+	 * 
 	 * @param player Player to give mail to
 	 * @param mail Mail to hold
 	 * @return True if mail was given, false if not
 	 */
 	public boolean holdMail(Player player, Mail mail) {
-		if(isHoldingMail(player)) return false;
+		if(isHoldingMail(player))
+			return false;
 		held.put(player, mail);
 		return held.containsKey(player);
 	}
 
 	/**
 	 * Remove held mail from a player
-	 *
+	 * 
 	 * @param player Player to remove mail from
 	 * @return True if mail was removed, false if not
 	 */
 	public boolean removeHeldMail(Player player) {
-		if(!isHoldingMail(player)) return false;
+		if(!isHoldingMail(player))
+			return false;
 
-		if(held.remove(player) == null) return false;
+		if(held.remove(player) == null)
+			return false;
 		return true;
 	}
 }
